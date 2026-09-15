@@ -121,269 +121,230 @@ function HeroMockup() {
 
 // ─── Competitive Map ─────────────────────────────────────────────────────────
 
-type Rating = "ahead" | "par" | "behind";
-interface PhaseScore { ttv: string; ttvRating: Rating; csat: string; csatRating: Rating; strengths: string[]; friction: string[]; }
-interface Phase { num: string; title: string; icon: string; desc: string; maximo: PhaseScore | null; sap: PhaseScore | null; recs: string[]; }
-
-const ratingPalette: Record<Rating, { bg: string; border: string; text: string; label: string }> = {
-  ahead: { bg: "#defbe6", border: "#24a148", text: "#0e6027", label: "Ahead of industry" },
-  par:   { bg: "#fdf6dd", border: "#f1c21b", text: "#8a5f00", label: "At par with industry" },
-  behind:{ bg: "#fff1f1", border: "#da1e28", text: "#a2191f", label: "Behind industry" },
-};
+interface PhaseScore { ttv: string; ttvMin: number; assessment: string; positive: boolean; }
+interface Phase { num: string; title: string; icon: string; desc: string; maximo: PhaseScore | null; maintainx: PhaseScore | null; recs: string[]; }
 
 const PHASES: Phase[] = [
   {
-    num: "01", title: "Discover & Learn", icon: "",
-    desc: "Can a new user find Maximo online and understand what it does?",
-    maximo: {
-      ttv: "38:24", ttvRating: "par", csat: "7.5", csatRating: "ahead",
-      strengths: ["Search: Easy to find across multiple search methods", "Learning materials clarity and quality is high", "Product comparisons highlighted value effectively"],
-      friction: ["Content sometimes overly generic or marketing-heavy", "Some technical descriptions feel overwhelming early in the journey"],
-    },
-    sap: {
-      ttv: "21:01", ttvRating: "ahead", csat: "5.5", csatRating: "par",
-      strengths: ["Easy to find via search engines and AI tools"],
-      friction: ["Nav & search lacked relevant information due to poor functionality", "SAP EAM products not available on AWS Marketplace despite multiple attempts"],
-    },
-    recs: ["Strengthen SEO keywords tied to asset management and ALM", "Improve IBM.com navigation so Maximo is easier to find", "Make AWS Marketplace listings easier to locate with accurate, detailed descriptions"],
+    num: "01", title: "Discover & Buy", icon: "",
+    desc: "Buyer finds Maximo online, evaluates it, and completes a purchase.",
+    maximo:    { ttv: "24 hrs – 2 weeks", ttvMin: 1440,  assessment: "Contract form process with no visibility into status. Manual steps slow the path to access.", positive: false },
+    maintainx: { ttv: "< 1 min",          ttvMin: 1,     assessment: "Transparent pricing and instant free signup. No friction from discovery to purchase.", positive: true },
+    recs: [
+      "Provide a technician-focused interactive product tour — click-through demo showing work orders, QR scans, and task navigation, no signup required",
+      "Introduce role-specific landing pages for Technicians, Maintenance Managers, and Admins",
+      "Publish short scenario-based workflow demos (fixing an offline pump, performing a daily inspection, replacing a part)",
+      "Provide clearer plan comparison with technician-oriented examples instead of abstract feature lists",
+      "Enable a pre-configured Demo Data Mode with sample assets, PMs, and work orders so buyers see value on Day 1",
+      "Add ROI calculators tied to technician time savings — downtime reduced, faster WO resolution, improved inventory accuracy",
+    ],
   },
   {
-    num: "02", title: "Try", icon: "",
-    desc: "Sign up for a trial and evaluate how easy it is to get started.",
-    maximo: {
-      ttv: "24:39", ttvRating: "par", csat: "7.0", csatRating: "ahead",
-      strengths: ["Tutorials are high-quality, intuitive, and tailored to different expertise levels", "Trial sign-up was easy, high CSAT ratings"],
-      friction: ["Tutorials are hard to find from the product website. Users resort to search engines.", "Mixed video playback quality on IBM developer site", "WalkMe failed for some users. First-login guidance is missing."],
-    },
-    sap: {
-      ttv: "18:43", ttvRating: "ahead", csat: "4.5", csatRating: "behind",
-      strengths: ["Offers structured, easy-to-follow learning content"],
-      friction: ["Does not have a trial experience"],
-    },
-    recs: ["Offer free tutorials earlier without requiring sign-up", "Make tutorials accessible from multiple entry points like product pages", "Enhance guidance on first login to direct users to key trial areas", "Improve visibility and access to guided tours throughout the trial"],
+    num: "02", title: "Provisioning", icon: "",
+    desc: "From purchase to a working environment ready for first login.",
+    maximo:    { ttv: "1–2 days", ttvMin: 1440, assessment: "Provisioning requirements churn. No way to check environment status. Welcome email sent manually.", positive: false },
+    maintainx: { ttv: "< 5 min",  ttvMin: 5,   assessment: "Instant access. Some parts of the flow lack context but the speed is a clear advantage.", positive: true },
+    recs: [
+      "Redesign the welcome email with clear login steps, support links, and training resources",
+      "Adopt MCSP to reduce provisioning to under 5 minutes by Q3",
+      "Surface environment status so admins can see progress without contacting support",
+    ],
   },
   {
-    num: "03", title: "Buy", icon: "",
-    desc: "Find pricing, understand the options, and complete an upgrade.",
-    maximo: {
-      ttv: "3:10", ttvRating: "ahead", csat: "8.25", csatRating: "ahead",
-      strengths: ["Pricing experience is smooth, with clear pricing and feature breakdowns", "Easy payment options, especially within the trial"],
-      friction: ["AWS Marketplace process confusing, with unclear upgrade paths", "Cluttered pricing pages made decision-making harder for users"],
-    },
-    sap: {
-      ttv: "2:29", ttvRating: "ahead", csat: "1.25", csatRating: "behind",
-      strengths: ["None identified"],
-      friction: ["No trial experience means no upgrade path exists", "Pricing details are basic and don't convey product value"],
-    },
-    recs: ["Reduce reliance on AWS navigation. Add in-app upgrade steps.", "Streamline region-specific processes for international users", "Clarify and simplify pricing terminology so users quickly understand options"],
+    num: "03", title: "First log-in", icon: "",
+    desc: "Admin enters for the first time and verifies applications are available.",
+    maximo:    { ttv: "< 30 sec", ttvMin: 0.5,  assessment: "No personalized welcome or getting started checklist. Outdated content on first landing.", positive: false },
+    maintainx: { ttv: "< 10 sec", ttvMin: 0.17, assessment: "Some login bugs, but the setup checklist immediately motivates progress.", positive: true },
+    recs: [
+      "Build an in-app guided setup wizard — walk admins through adding assets, creating first work order, setting roles, and inviting technicians",
+      "Create a separate technician onboarding path with a simple 3-action start: view tasks, scan an asset, complete first work order",
+      "Introduce a first value moment progress tracker with milestones like First work order created and First PM scheduled",
+    ],
   },
   {
-    num: "04", title: "Get Started", icon: "",
-    desc: "Add users, set permissions, and confirm the system is ready to use.",
-    maximo: {
-      ttv: "6:19", ttvRating: "behind", csat: "5.0", csatRating: "par",
-      strengths: ["Users generally found adding a new user manageable", "Rated positively for ease of navigation and UI clarity in some areas"],
-      friction: ["Confusing terms and duplicate nav items made basic tasks hard to complete.", "Suite vs Manage confusion caused disorientation", "Confusion around roles and terminology throughout", "Access management process does not match users' mental model"],
-    },
-    sap: null,
-    recs: ["Improve navigation clarity by removing duplicates and streamlining overall nav", "Introduce guided learning to provide context for significant changes", "Strengthen support by offering real-time assistance (e.g. Maximo Assistant)", "If possible, automatically authorize admins with user management privileges"],
+    num: "04", title: "Setup complete", icon: "",
+    desc: "Admin configures accounts, loads asset data, and the system is ready for users.",
+    maximo:    { ttv: "~15+ days", ttvMin: 21600, assessment: "No guidance, missing CTAs, and no progress indicators. Users don't know what done looks like.", positive: false },
+    maintainx: { ttv: "< 25 min",  ttvMin: 25,   assessment: "Clear completion moment and CTA. Users know exactly when setup is finished.", positive: true },
+    recs: [
+      "Keep the lightweight Start Free entry but surface clearer guidance on what a good setup looks like for admins",
+      "Enhance Setup Center checklists with outcome-based language",
+      "Add contextual explanations to setup tasks so admins understand why each step matters",
+      "Support role clarity by distinguishing admin vs technician setup paths during onboarding",
+    ],
   },
   {
-    num: "05", title: "Use", icon: "",
-    desc: "Complete core workflows as an Asset Manager, Maintenance Manager, or Technician.",
-    maximo: null, sap: null,
-    recs: ["Simplify core workflow navigation", "Reduce cognitive load in work order management", "Improve role-based interface clarity"],
+    num: "05", title: "Deployment complete", icon: "",
+    desc: "Users learn workflows and validate the system before going live.",
+    maximo:    { ttv: "~10+ days", ttvMin: 14400, assessment: "No role-based onboarding guidance. Users must self-direct through complex configuration.", positive: false },
+    maintainx: { ttv: "< 2 min",   ttvMin: 2,    assessment: "Ready to use immediately. Flows are fast even without deep configuration.", positive: true },
+    recs: [
+      "Maintain the strong mobile-first experience for technicians",
+      "Reinforce confirmation moments to build confidence after key actions",
+      "Make critical actions — assign, update, close work — more visually distinct for first-time users",
+      "Review feature labels to reflect real-world maintenance language",
+      "Reduce ambiguity around advanced workflows like permissions, approvals, and automation",
+      "Replace generic system labels with action-oriented phrasing",
+    ],
   },
   {
-    num: "06", title: "Get Help", icon: "",
-    desc: "Find in-product support, documentation, and live assistance options.",
-    maximo: null, sap: null,
-    recs: ["Surface contextual help at the moment of need", "Improve in-app documentation discoverability", "Consider live chat or AI assistant integration"],
-  },
-  {
-    num: "07", title: "Expand", icon: "",
-    desc: "Activate new modules from the MAS catalog and confirm configuration.",
-    maximo: null, sap: null,
-    recs: ["Simplify module activation flows", "Provide clear confirmation of successful configuration", "Reduce steps needed to trial new in-suite capabilities"],
-  },
-  {
-    num: "08", title: "End Use", icon: "",
-    desc: "Export data, deactivate licenses, and remove user accounts.",
-    maximo: null, sap: null,
-    recs: ["Ensure data export is discoverable and straightforward", "Provide clear billing deactivation confirmations", "Guide admins through account removal process"],
+    num: "06", title: "Paid aha moment", icon: "",
+    desc: "Technician completes first real work order — the moment value is proven.",
+    maximo:    { ttv: "< 20 min", ttvMin: 20, assessment: "No guides to repeat actions or celebrate achievements after the first success.", positive: false },
+    maintainx: { ttv: "< 5 min",  ttvMin: 5,  assessment: "Work order creation and closure is fast and satisfying. Minimal fields, smooth status flow.", positive: true },
+    recs: [
+      "Extend the Setup Center beyond completion instead of removing it entirely",
+      "Introduce a What's next panel after setup is marked complete — covering permissions, preventive maintenance, and reporting",
+      "Provide progressive disclosure for advanced features rather than leaving discovery to self-exploration",
+    ],
   },
 ];
 
+// Font size system: 11px mono labels, 14px body — no other sizes except headings
+const MONO: React.CSSProperties = { fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: "0.06em" };
+const BODY: React.CSSProperties = { fontSize: 14, lineHeight: 1.65 };
+
+const IBM_BLUE = "#0f62fe";
+const MX_TEAL  = "#007d79";
+
+function ComparisonBar({ ibmTtv, ibmMin, mxTtv, mxMin }: {
+  ibmTtv: string; ibmMin: number; mxTtv: string; mxMin: number;
+}) {
+  // Log scale so week-scale vs minute-scale values both render visibly
+  const logPct = (v: number, max: number) =>
+    Math.round((Math.log(v + 1) / Math.log(max + 1)) * 100);
+  const maxMin = Math.max(ibmMin, mxMin);
+
+  const rows = [
+    { label: "IBM Maximo", ttv: ibmTtv, min: ibmMin, fill: IBM_BLUE },
+    { label: "MaintainX",  ttv: mxTtv,  min: mxMin,  fill: MX_TEAL  },
+  ];
+
+  return (
+    <div style={{ marginBottom: 28 }}>
+      <div style={{ ...MONO, textTransform: "uppercase", color: "#6f6f6f", marginBottom: 12 }}>
+        Time to Value — lower is faster
+      </div>
+      {rows.map(row => (
+        <div key={row.label} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 10 }}>
+          <span style={{ ...MONO, color: "#525252", width: 100, flexShrink: 0 }}>{row.label}</span>
+          <div style={{ flex: 1, background: "#e8e8e8", height: 7, borderRadius: 2, overflow: "hidden" }}>
+            <div style={{
+              height: "100%",
+              width: `${logPct(row.min, maxMin)}%`,
+              background: row.fill,
+              borderRadius: 2,
+              minWidth: 4,
+              transition: "width 0.6s ease",
+            }} />
+          </div>
+          <span style={{ fontFamily: "'Fraunces', serif", fontSize: 15, fontWeight: 300, color: row.fill, width: 110, textAlign: "right", flexShrink: 0 }}>
+            {row.ttv}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function CompetitiveMap() {
   const [active, setActive] = useState<number | null>(null);
-  const [tab, setTab] = useState<"scores" | "recs">("scores");
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [tab, setTab] = useState<"scores" | "recommendations">("scores");
 
   const phase = active !== null ? PHASES[active] : null;
 
   return (
-    <div>
+    <div onMouseLeave={() => setActive(null)}>
       {/* Legend */}
-      <div className="flex flex-wrap gap-5 mb-5">
-        {(Object.entries(ratingPalette) as [Rating, typeof ratingPalette[Rating]][]).map(([key, val]) => (
-          <div key={key} className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full border-2" style={{ backgroundColor: val.bg, borderColor: val.border }} />
-            <span className="text-sm text-[#6f6f6f]" style={{ fontFamily: "'DM Mono', monospace" }}>{val.label}</span>
+      <div style={{ display: "flex", gap: 28, marginBottom: 24, alignItems: "center" }}>
+        {[{ fill: IBM_BLUE, label: "IBM Maximo" }, { fill: MX_TEAL, label: "MaintainX" }].map(l => (
+          <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 24, height: 4, background: l.fill, borderRadius: 2 }} />
+            <span style={{ ...MONO, color: "#525252" }}>{l.label}</span>
           </div>
         ))}
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-[#f4f4f4] border-2 border-[#c6c6c6]" />
-          <span className="text-sm text-[#6f6f6f]" style={{ fontFamily: "'DM Mono', monospace" }}>Not evaluated</span>
-        </div>
       </div>
 
-      {/* Horizontal scroll strip */}
-      <div ref={scrollRef} className="overflow-x-auto cursor-grab select-none" style={{ scrollbarWidth: "thin" }}>
-        <div className="flex border border-[rgba(0,0,0,0.1)] min-w-max">
+      {/* Phase strip — hover to open */}
+      <div className="overflow-x-auto select-none" style={{ scrollbarWidth: "none" }}>
+        <div className="flex border-t border-b border-[rgba(0,0,0,0.12)] min-w-max">
           {PHASES.map((p, i) => {
             const isActive = active === i;
-            const hasData = p.maximo !== null;
-            const m = p.maximo;
             return (
-              <button
+              <div
                 key={i}
-                onClick={() => { setActive(isActive ? null : i); setTab("scores"); }}
-                className="relative flex-none w-48 text-left p-5 border-r border-[rgba(0,0,0,0.08)] transition-all duration-200 cursor-pointer"
-                style={{ backgroundColor: isActive ? "#161616" : hasData ? "white" : "#fafafa" }}
-                onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = "#f4f4f4"; }}
-                onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = hasData ? "white" : "#fafafa"; }}
+                onMouseEnter={() => { setActive(i); setTab("scores"); }}
+                className="relative flex-none w-44 text-left px-5 py-5 border-r border-[rgba(0,0,0,0.08)] transition-colors duration-150 cursor-default"
+                style={{ backgroundColor: isActive ? "#161616" : "transparent" }}
               >
-                {/* Phase num */}
-                <div className="text-[10px] uppercase tracking-widest mb-3"
-                  style={{ fontFamily: "'DM Mono', monospace", color: isActive ? "rgba(255,255,255,0.4)" : "#6f6f6f" }}>
-                  Phase {p.num}
-                </div>
-                {/* Title */}
-                <div className="text-sm font-normal leading-tight mb-4"
-                  style={{ color: isActive ? "white" : "#161616" }}>
-                  {p.title}
-                </div>
-                {/* Score dots */}
-                {hasData && m ? (
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2.5 h-2.5 rounded-full flex-none" style={{ backgroundColor: ratingPalette[m.ttvRating].border }} />
-                      <span className="text-[9px]" style={{ fontFamily: "'DM Mono', monospace", color: isActive ? "rgba(255,255,255,0.5)" : "#6f6f6f" }}>TTV · {m.ttv}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2.5 h-2.5 rounded-full flex-none" style={{ backgroundColor: ratingPalette[m.csatRating].border }} />
-                      <span className="text-[9px]" style={{ fontFamily: "'DM Mono', monospace", color: isActive ? "rgba(255,255,255,0.5)" : "#6f6f6f" }}>CSAT · {m.csat}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-[9px] uppercase tracking-widest" style={{ fontFamily: "'DM Mono', monospace", color: isActive ? "rgba(255,255,255,0.3)" : "#c6c6c6" }}>
-                    Evaluated
-                  </div>
-                )}
-                {/* Active indicator */}
-                {isActive && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#0f62fe]" />}
-              </button>
+                {isActive && <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: IBM_BLUE }} />}
+                <div style={{ ...MONO, textTransform: "uppercase", letterSpacing: "0.14em", color: isActive ? "rgba(255,255,255,0.45)" : "#525252", marginBottom: 8 }}>{p.num}</div>
+                <div style={{ fontSize: 14, lineHeight: 1.3, color: isActive ? "#ffffff" : "#161616" }}>{p.title}</div>
+              </div>
             );
           })}
         </div>
       </div>
 
       {/* Detail panel */}
-      <div className="overflow-hidden transition-all duration-300" style={{ maxHeight: active !== null ? "900px" : "0" }}>
+      <div className="overflow-hidden transition-all duration-300" style={{ maxHeight: active !== null ? "800px" : "0" }}>
         {phase && (
-          <div className="border border-t-0 border-[rgba(0,0,0,0.1)] bg-white">
-            {/* Panel header */}
-            <div className="flex items-start justify-between gap-6 p-8 pb-0">
-              <div className="flex items-start gap-4">
-                <div>
-                  <div className="text-[10px] uppercase tracking-widest text-[#0f62fe] mb-1" style={{ fontFamily: "'DM Mono', monospace" }}>Phase {phase.num}</div>
-                  <h3 className="text-2xl font-light text-[#161616] mb-2" style={{ fontFamily: "'Fraunces', serif" }}>{phase.title}</h3>
-                  <p className="text-sm text-[#6f6f6f] max-w-2xl leading-relaxed">{phase.desc}</p>
-                </div>
+          <div style={{ border: "1px solid rgba(0,0,0,0.12)", borderTop: "none", background: "#ffffff" }}>
+            {/* Header */}
+            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 24, padding: "24px 28px 20px", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+              <div>
+                <div style={{ ...MONO, textTransform: "uppercase", letterSpacing: "0.14em", color: IBM_BLUE, marginBottom: 6 }}>Phase {phase.num}</div>
+                <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 300, color: "#161616", marginBottom: 4, lineHeight: 1.2 }}>{phase.title}</h3>
+                <p style={{ ...BODY, color: "#525252", maxWidth: 520, margin: 0 }}>{phase.desc}</p>
               </div>
-              {/* Tab toggle */}
-              <div className="flex gap-0 shrink-0 border border-[rgba(0,0,0,0.1)]">
-                {(["scores", "recs"] as const).map(t => (
-                  <button key={t} onClick={() => setTab(t)}
-                    className="px-4 py-2 text-[10px] uppercase tracking-widest cursor-pointer transition-colors"
-                    style={{ fontFamily: "'DM Mono', monospace", backgroundColor: tab === t ? "#161616" : "white", color: tab === t ? "white" : "#6f6f6f" }}>
+              <div style={{ display: "flex", flexShrink: 0, border: "1px solid rgba(0,0,0,0.12)" }}>
+                {(["scores", "recommendations"] as const).map(t => (
+                  <button key={t} onClick={() => setTab(t)} style={{
+                    ...MONO, textTransform: "uppercase", letterSpacing: "0.08em",
+                    padding: "8px 14px", cursor: "pointer", border: "none",
+                    background: tab === t ? "#161616" : "transparent",
+                    color: tab === t ? "#ffffff" : "#525252",
+                  }}>
                     {t === "scores" ? "Scores" : "Recommendations"}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Tab content */}
-            <div className="p-8 pt-6">
+            <div style={{ padding: "24px 28px" }}>
               {tab === "scores" ? (
-                phase.maximo ? (
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Maximo column */}
-                    {[{ name: "IBM Maximo", color: "#0f62fe", data: phase.maximo }, ...(phase.sap ? [{ name: "SAP EAM", color: "#6f6f6f", data: phase.sap }] : [])].map(col => (
-                      <div key={col.name}>
-                        <div className="text-[10px] uppercase tracking-widest mb-4" style={{ fontFamily: "'DM Mono', monospace", color: col.color }}>{col.name}</div>
-                        {/* Score pills */}
-                        <div className="flex gap-3 mb-6">
-                          {([["TTV", col.data.ttv, col.data.ttvRating], ["CSAT", col.data.csat, col.data.csatRating]] as [string, string, Rating][]).map(([label, val, rating]) => (
-                            <div key={label} className="flex-1 border p-4"
-                              style={{ backgroundColor: ratingPalette[rating].bg, borderColor: ratingPalette[rating].border }}>
-                              <div className="text-[9px] uppercase tracking-widest mb-1" style={{ fontFamily: "'DM Mono', monospace", color: ratingPalette[rating].text }}>{label}</div>
-                              <div className="text-xl font-light mb-1" style={{ fontFamily: "'Fraunces', serif", color: ratingPalette[rating].text }}>{val}</div>
-                              <div className="text-[9px]" style={{ color: ratingPalette[rating].text }}>{ratingPalette[rating].label}</div>
-                            </div>
-                          ))}
-                        </div>
-                        {/* Strengths */}
-                        <div className="mb-4">
-                          <div className="text-[9px] uppercase tracking-widest text-[#24a148] mb-2" style={{ fontFamily: "'DM Mono', monospace" }}>↑ Strengths</div>
-                          <div className="space-y-1.5">
-                            {col.data.strengths.map(s => (
-                              <div key={s} className="flex gap-2.5 items-start">
-                                <div className="w-1.5 h-1.5 rounded-full bg-[#24a148] mt-1.5 shrink-0" />
-                                <span className="text-sm text-[#6f6f6f] leading-relaxed">{s}</span>
-                              </div>
-                            ))}
+                phase.maximo && phase.maintainx ? (
+                  <div>
+                    <ComparisonBar
+                      ibmTtv={phase.maximo.ttv}   ibmMin={phase.maximo.ttvMin}
+                      mxTtv={phase.maintainx.ttv} mxMin={phase.maintainx.ttvMin}
+                    />
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, paddingTop: 8, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+                      {[
+                        { name: "IBM Maximo", color: IBM_BLUE, data: phase.maximo },
+                        { name: "MaintainX",  color: MX_TEAL,  data: phase.maintainx },
+                      ].map(col => (
+                        <div key={col.name} style={{ paddingTop: 16 }}>
+                          <div style={{ ...MONO, textTransform: "uppercase", color: col.color, marginBottom: 10 }}>{col.name}</div>
+                          <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                            <div style={{ width: 5, height: 5, borderRadius: "50%", marginTop: 6, flexShrink: 0, background: col.data.positive ? "#24a148" : "#da1e28" }} />
+                            <p style={{ ...BODY, color: "#525252", margin: 0 }}>{col.data.assessment}</p>
                           </div>
                         </div>
-                        {/* Friction */}
-                        <div>
-                          <div className="text-[9px] uppercase tracking-widest text-[#da1e28] mb-2" style={{ fontFamily: "'DM Mono', monospace" }}>↓ Friction</div>
-                          <div className="space-y-1.5">
-                            {col.data.friction.map(f => (
-                              <div key={f} className="flex gap-2.5 items-start">
-                                <div className="w-1.5 h-1.5 rounded-full bg-[#da1e28] mt-1.5 shrink-0" />
-                                <span className="text-sm text-[#6f6f6f] leading-relaxed">{f}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                    {!phase.sap && (
-                      <div className="bg-[#f4f4f4] flex items-center justify-center p-8">
-                        <div className="text-center">
-                          <div className="text-[10px] uppercase tracking-widest text-[#6f6f6f] mb-2" style={{ fontFamily: "'DM Mono', monospace" }}>SAP EAM</div>
-                          <p className="text-sm text-[#6f6f6f]">No comparative data available for this phase</p>
-                        </div>
-                      </div>
-                    )}
+                      ))}
+                    </div>
                   </div>
                 ) : (
-                  <div className="bg-[#f4f4f4] p-8 text-center">
-                    <div className="text-[10px] uppercase tracking-widest text-[#6f6f6f] mb-3" style={{ fontFamily: "'DM Mono', monospace" }}>Evaluation scope</div>
-                    <p className="text-sm text-[#6f6f6f] max-w-lg mx-auto leading-relaxed">
-                      Detailed TTV and CSAT measurements were focused on phases 1–4. This phase was evaluated qualitatively as part of the complete user journey study.
-                    </p>
-                  </div>
+                  <p style={{ ...BODY, color: "#6f6f6f", paddingTop: 8 }}>This phase was evaluated qualitatively.</p>
                 )
               ) : (
                 <div>
-                  <div className="text-[10px] uppercase tracking-widest text-[#0f62fe] mb-4" style={{ fontFamily: "'DM Mono', monospace" }}>Recommendations: {phase.title}</div>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div style={{ ...MONO, textTransform: "uppercase", color: "#6f6f6f", marginBottom: 18 }}>Recommendations</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 18 }}>
                     {phase.recs.map((rec, i) => (
-                      <div key={i} className="border border-[rgba(0,0,0,0.08)] p-4 bg-[#f4f4f4]">
-                        <div className="w-5 h-5 bg-[#0f62fe] text-white text-[9px] flex items-center justify-center mb-3" style={{ fontFamily: "'DM Mono', monospace" }}>{i + 1}</div>
-                        <p className="text-sm text-[#6f6f6f] leading-relaxed">{rec}</p>
+                      <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                        <span style={{ ...MONO, color: IBM_BLUE, flexShrink: 0, marginTop: 1 }}>{String(i + 1).padStart(2, "0")}</span>
+                        <p style={{ ...BODY, color: "#525252", margin: 0 }}>{rec}</p>
                       </div>
                     ))}
                   </div>
@@ -394,8 +355,8 @@ function CompetitiveMap() {
         )}
       </div>
 
-      <p className="text-sm text-[#6f6f6f] mt-3" style={{ fontFamily: "'DM Mono', monospace" }}>
-        Click any phase → explore scores & recommendations
+      <p style={{ ...MONO, color: "#8d8d8d", marginTop: 12 }}>
+        Hover any phase to explore scores and recommendations
       </p>
     </div>
   );
